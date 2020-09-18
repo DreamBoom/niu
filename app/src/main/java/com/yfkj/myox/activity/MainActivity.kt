@@ -80,15 +80,16 @@ class MainActivity : AppCompatActivity() {
                                 JSONObject.parseObject(s, object : TypeReference<AddBean>() {})
                             if (bean.code == 200) {
                                 refresh.autoRefresh()
+                                utils.hideSoftKeyboard()
                                 pop.dismiss()
                             } else {
-                                utils.showToast("网络异常，请重新添加")
+                                utils.showToast("文件夹名称重复,请重新命名")
                             }
                         }
 
-                        override fun onFinished() {
-                            super.onFinished()
-                            utils.hideSoftKeyboard()
+                        override fun onError(throwable: Throwable, b: Boolean) {
+                            super.onError(throwable, b)
+                            utils.showToast("文件夹名称重复,请重新命名")
                         }
                     })
 

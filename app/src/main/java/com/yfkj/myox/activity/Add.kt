@@ -44,17 +44,18 @@ class Add : AppCompatActivity() {
             }
             finish()
         }
-        change.setOnClickListener { pop(1) }
+
         val na = intent.getStringExtra("name")
         parentId = intent.getStringExtra("parentId")!!
         id = intent.getStringExtra("id")!!
         path = intent.getStringExtra("path")!!
         name.text = na
+        change.setOnClickListener { pop(1,na!!) }
         utils.changeStatusBlack(true, window)
         val ms = LinearLayoutManager(this)
         ms.orientation = LinearLayoutManager.VERTICAL
         list.layoutManager = ms
-        r1.setOnClickListener { pop(0) }
+        r1.setOnClickListener { pop(0,na!!) }
         refresh.setEnableOverScrollDrag(false)
         refresh.setOnRefreshListener { getData() }
     }
@@ -71,7 +72,7 @@ class Add : AppCompatActivity() {
         }
     }
 
-    private fun pop(type: Int) {
+    private fun pop(type: Int,name1:String) {
         val v = utils.getView(this, R.layout.pop_edit)
         val pop = PopupWindow(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
@@ -84,7 +85,12 @@ class Add : AppCompatActivity() {
         val tv3 = v.findViewById<TextView>(R.id.tv_3)
         val tv4 = v.findViewById<TextView>(R.id.tv_4)
         val etName = v.findViewById<EditText>(R.id.et_name)
-        tv3!!.setOnClickListener { pop.dismiss() }
+        if (type != 0) {
+            etName.setText(name1.toCharArray(), 0, name1.length)
+        }
+        tv3!!.setOnClickListener {
+            utils.hideSoftKeyboard()
+            pop.dismiss() }
         tv4!!.setOnClickListener {
             val toString = etName.text.toString()
             if (TextUtils.isEmpty(toString)) {
@@ -98,16 +104,20 @@ class Add : AppCompatActivity() {
                         object : BaseHttpCallBack(this) {
                             override fun onSuccess(s: String) {
                                 super.onSuccess(s)
-                                LogUtils.i(s)
-                                utils.hideSoftKeyboard()
                                 val bean =
                                     JSONObject.parseObject(s, object : TypeReference<AddBean>() {})
                                 if (bean.code == 200) {
                                     refresh.autoRefresh()
                                     pop.dismiss()
+                                    utils.hideSoftKeyboard()
                                 } else {
                                     utils.showToast(bean.msg)
                                 }
+                            }
+
+                            override fun onError(throwable: Throwable, b: Boolean) {
+                                super.onError(throwable, b)
+                                utils.showToast("文件夹已存在,请重新命名")
                             }
                         })
                 } else {
@@ -119,7 +129,6 @@ class Add : AppCompatActivity() {
                         object : BaseHttpCallBack(this) {
                             override fun onSuccess(s: String) {
                                 super.onSuccess(s)
-                                utils.hideSoftKeyboard()
                                 val bean =
                                     JSONObject.parseObject(s, object : TypeReference<AddBean>() {})
                                 if (bean.code == 200) {
@@ -127,8 +136,9 @@ class Add : AppCompatActivity() {
                                     MainActivity.nameList.removeAt(MainActivity.nameList.size - 1)
                                     MainActivity.nameList.add("/$toString")
                                     pop.dismiss()
+                                    utils.hideSoftKeyboard()
                                 } else {
-                                    utils.showToast("网络异常，请重新添加")
+                                    utils.showToast("文件夹已存在,请重新命名")
                                 }
                             }
                         })

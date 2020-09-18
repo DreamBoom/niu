@@ -28,7 +28,7 @@ open class BaseHttpCallBack(
 
     override fun onError(throwable: Throwable, b: Boolean) {
         //    Log.i("TAG加载失败了========>", throwable.message.toString())
-        utils.showToast(throwable.message!!)
+      //  utils.showToast("")
         //  utils.showToast("加载失败，请重试")
     }
 

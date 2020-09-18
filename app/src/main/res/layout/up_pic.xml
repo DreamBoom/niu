@@ -28,14 +28,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
-<ImageView
-    android:background="@color/greyb3"
-    android:layout_width="match_parent"
-    android:layout_height="0.5dp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:padding="15dp"
         android:text="名称"

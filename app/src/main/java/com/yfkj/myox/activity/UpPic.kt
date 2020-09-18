@@ -11,6 +11,7 @@ import android.database.Cursor
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.TextUtils
@@ -58,7 +59,6 @@ class UpPic : AppCompatActivity() {
         for (i in 0 until nameList.size) {
             AllPath += nameList[i]
         }
-        LogUtils.i(AllPath)
         name0 = intent.getStringExtra("name")!!
         id0 = intent.getStringExtra("id")!!
         name.text = name0
@@ -132,6 +132,9 @@ class UpPic : AppCompatActivity() {
                 }
                 upMp4()
             }
+            if(pngList.isEmpty()&&mp4List.isEmpty()){
+                utils.showToast("请选择文件上传")
+            }
         }
     }
 
@@ -150,6 +153,7 @@ class UpPic : AppCompatActivity() {
                 .thumbnailScale(1f) // 缩略图的比例
                 .imageEngine(MyGlideEngine()) // 使用的图片加载引擎
                 .capture(true) //是否提供拍照功能
+                .showPreview(false)
                 .captureStrategy(CaptureStrategy(true, "com.yfkj.myox.fileprovider"))//存储到哪里
                 .forResult(201) // 设置作为标记的请求码
         } else {
@@ -164,7 +168,8 @@ class UpPic : AppCompatActivity() {
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 .thumbnailScale(1f) // 缩略图的比例
                 .imageEngine(MyGlideEngine()) // 使用的图片加载引擎
-                .capture(true) //是否提供拍照功能
+                .capture(false) //是否提供拍照功能
+                .showPreview(false)
                 .captureStrategy(CaptureStrategy(true, "com.yfkj.myox.fileprovider"))//存储到哪里
                 .forResult(202) // 设置作为标记的请求码
         }
@@ -201,7 +206,7 @@ class UpPic : AppCompatActivity() {
             val file = mp4List[mp4Num]
             val l = (file.length() / chunk + 1).toInt()
             runAsync {
-                Test.fileSp(file.path, "/storage/emulated/0/DCIM/Camera/")
+                Test.fileSp(file.path, "/storage/emulated/0/")
                 upMp4Fp(l, nextInt)
             }
         } else {
@@ -215,7 +220,7 @@ class UpPic : AppCompatActivity() {
     var ll = 0
     private fun upMp4Fp(long: Int, time: Int) {
         if (ll < long) {
-            val file1 = File("/storage/emulated/0/DCIM/Camera/a$ll.mp4")
+            val file1 = File("/storage/emulated/0/a$ll.mp4")
             HttpRequestPort.instance.mp4Up(file1,
                 fileName.text.toString() + "_" + time + "_" + mp4Num + ".mp4",
                 "mp4",
@@ -232,6 +237,12 @@ class UpPic : AppCompatActivity() {
                             return
                         } else {
                             deleteImage(file1.path)
+                            if(File(file1.path).length()>0){
+                                deleteFile1(file1.path)
+                            }
+                            if(File(file1.path).length()>0){
+                                deleteFile(file1.path)
+                            }
                             ll++
                             upMp4Fp(long, time)
                         }
@@ -303,25 +314,31 @@ class UpPic : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 201 && resultCode == RESULT_OK) {
             pngNum = 0
-            pngList.clear()
             val mSelected = Matisse.obtainResult(data)
             var bitm = BitmapUtils.uriToBitmap(this, mSelected[mSelected.size - 1])
             for (i in 0 until mSelected.size) {
-                val file = uriToFile(mSelected[i], this)
-                pngList.add(file!!)
+                if(mSelected[i].path!!.contains("jpg")){
+                    val filePath = getFilePath(mSelected[i], this)
+                    val file = File(filePath!!)
+                    pngList.add(file)
+                } else{
+                    val uriToFile = uriToFile(mSelected[i], this)
+                    pngList.add(uriToFile!!)
+                }
+            }
+            for(i in 0 until pngList.size){
+                LogUtils.i("" + pngList[i].length())
             }
             if (pngList.size > 0) {
-                all_P_Num += pngList.size
                 im_up1.visibility = View.VISIBLE
                 im_up.isEnabled = false
                 pNum.visibility = View.VISIBLE
-                pNum.text = "共 $all_P_Num 张"
+                pNum.text = "共 ${pngList.size} 张"
             }
             im_up.setImageBitmap(bitm)
         }
         if (requestCode == 202 && resultCode == RESULT_OK) {
             mp4Num = 0
-            mp4List.clear()
             if (resultCode == RESULT_OK) {
                 val mSelected1 = Matisse.obtainResult(data)
                 for (i in 0 until mSelected1.size) {
@@ -343,8 +360,56 @@ class UpPic : AppCompatActivity() {
             }
         }
     }
+    /**
+     * 根据Uri获取文件真实地址
+     * 处理拍照返回
+     */
+    fun getFilePath(uri: Uri?, context: Context): String? {
+        if (null == uri) return null
+        val scheme = uri.scheme
+        var realPath: String? = null
+        if (scheme == null) realPath = uri.path else if (ContentResolver.SCHEME_FILE == scheme) {
+            realPath = uri.path
+        } else if (ContentResolver.SCHEME_CONTENT == scheme) {
+            val cursor = context.contentResolver.query(
+                uri, arrayOf(MediaStore.Images.ImageColumns.DATA),
+                null, null, null
+            )
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                    if (index > -1) {
+                        realPath = cursor.getString(index)
+                    }
+                }
+                cursor.close()
+            }
+        }
+        if (TextUtils.isEmpty(realPath)) {
+            if (uri != null) {
+                val uriString = uri.toString()
+                val index = uriString.lastIndexOf("/")
+                val imageName = uriString.substring(index)
+                var storageDir: File?
+                storageDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES
+                )
+                val file = File(storageDir, imageName)
+                if (file.exists()) {
+                    realPath = file.absolutePath
+                } else {
+                    storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    val file1 = File(storageDir, imageName)
+                    realPath = file1.absolutePath
+                }
+            }
+        }
+        return realPath
+    }
+
 
     private fun uriToFile(uri: Uri, context: Context): File? {
+//处理相册返回
         var path: String? = null
         if ("file" == uri.scheme) {
             path = uri.encodedPath
@@ -439,6 +504,26 @@ class UpPic : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         intent.data = Uri.fromFile(File(imgPath))
         sendBroadcast(intent)
+    }
+
+    //删除文件后更新数据库  通知媒体库更新文件夹,！！！！！filepath（文件夹路径）要求尽量精确，以防删错
+     fun deleteFile1(filePath: String): Boolean {
+        val file = File(filePath)
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        return if (file.exists() && file.isFile) {
+            if (file.delete()) {
+                LogUtils.i(
+                    "Copy_Delete.deleteSingleFile: 删除单个文件" + filePath + "成功！"
+                )
+                true
+            } else {
+                LogUtils.i("删除单个文件" + filePath+ "失败！")
+                false
+            }
+        } else {
+            LogUtils.i("删除单个文件失败：" + filePath+ "不存在！")
+            false
+        }
     }
 
 }

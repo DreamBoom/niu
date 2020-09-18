@@ -21,6 +21,7 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import com.yfkj.myox.R
 import java.io.UnsupportedEncodingException
 import java.lang.ref.WeakReference
@@ -159,11 +160,22 @@ class ActivityUtils {
 
     fun hideSoftKeyboard() {
         val activity = activity ?: return
-        val view = activity.currentFocus
-        if (view != null) {
-            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
+//        val view = activity.currentFocus
+//        if (view != null) {
+//            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            imm.hideSoftInputFromWindow(view.windowToken, 0)
+//        }
+
+        val imm =
+            activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager //得到InputMethodManager的实例
+
+        if (imm.isActive) { //如果开启
+            imm.toggleSoftInput(
+                InputMethodManager.SHOW_IMPLICIT,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            ) //关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
         }
+
     }
 
     fun getView(context: Context, viewId: Int): View {

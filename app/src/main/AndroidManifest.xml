@@ -36,27 +36,29 @@
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         android:requestLegacyExternalStorage="true"
         tools:replace="android:icon,android:theme">
-        <activity android:name=".activity.Look"/>
-        <activity android:name=".activity.Add" />
+        <activity android:name=".activity.Look"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".activity.Add"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".activity.UpPic" />
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize">
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <provider-->
-<!--            android:name="android.support.v4.content.FileProvider"-->
-<!--            android:authorities="${applicationId}.fileprovider"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/filepaths" />-->
-<!--        </provider>-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.yfkj.myox.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

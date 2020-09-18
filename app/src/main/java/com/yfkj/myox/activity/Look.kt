@@ -19,12 +19,13 @@ class Look : AppCompatActivity() {
     var list = arrayListOf<LookBean.ResultBean.ListBean>()
     var gridAdapter: GridAdapter? = null
     private var page = 1
+    var id = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_look)
         utils.changeStatusBlack(true, window)
         val na = intent.getStringExtra("name")
-        val id = intent.getStringExtra("id")
+        id = intent.getStringExtra("id")!!
         name.text = na
         back.setOnClickListener {
             if (MainActivity.nameList.size > 0) {
@@ -68,7 +69,6 @@ class Look : AppCompatActivity() {
             object : BaseHttpCallBack(this) {
                 override fun onSuccess(s: String) {
                     super.onSuccess(s)
-                    //  LogUtils.i(s)
                     val bean =
                         JSONObject.parseObject(s, object : TypeReference<LookBean>() {})
                     if (bean.code == 200) {
@@ -76,10 +76,12 @@ class Look : AppCompatActivity() {
                             if (page == 1) {
                                 list.clear()
                             }
-                            page++
                             list.addAll(bean.result.list)
-                            LogUtils.i("" + list.size)
                             gridAdapter!!.notifyDataSetChanged()
+                            if(page>1){
+                                grid.smoothScrollToPosition((page-1)*10-2)
+                            }
+                            page++
                         } else {
                             utils.showToast("暂无文件")
                         }
