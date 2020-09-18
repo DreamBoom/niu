@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="15dp"
+    android:id="@+id/ll1"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<ImageView
+    android:background="@drawable/img_wjj"
+    android:layout_width="45dp"
+    android:layout_height="45dp"/>
+    <TextView
+        android:id="@+id/file_name"
+        android:textSize="@dimen/size15"
+        android:textColor="@color/black3"
+        android:padding="15dp"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/look"
+        android:textSize="@dimen/size15"
+        android:textColor="@color/black3"
+        android:padding="15dp"
+        android:text="查看/上传"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

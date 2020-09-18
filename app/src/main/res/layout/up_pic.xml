@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".activity.UpPic">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/back"
+            android:gravity="center"
+            android:padding="15dp"
+            android:src="@mipmap/back_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/name"
+            android:gravity="center"
+            android:textColor="@color/black3"
+            android:textSize="@dimen/size17"
+            android:padding="15dp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+<ImageView
+    android:background="@color/greyb3"
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:padding="15dp"
+        android:text="名称"
+        android:textColor="@color/black3"
+        android:textSize="@dimen/size15" />
+
+    <EditText
+        android:id="@+id/fileName"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_et"
+        android:hint="请输入名称"
+        android:lines="1"
+        android:textSize="@dimen/size15" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="图片上传"
+            android:textColor="@color/black3"
+            android:textSize="@dimen/size15" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="(要求: > 300万像素 帧率 ≥ 60)"
+            android:textColor="@color/text_gray"
+            android:textSize="@dimen/size15" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:paddingStart="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/im_up"
+            android:background="@drawable/icon_tab_zjzg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+        <ImageView
+            android:id="@+id/im_up1"
+            android:layout_toEndOf="@+id/im_up"
+            android:background="@drawable/icon_tab_zjzg"
+            android:visibility="gone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="20dp" />
+    </RelativeLayout>
+<TextView
+    android:id="@+id/pNum"
+    android:paddingTop="10dp"
+    android:paddingBottom="15dp"
+    android:gravity="center"
+    android:visibility="gone"
+    android:layout_width="110dp"
+    android:layout_height="wrap_content"/>
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="视频上传"
+        android:textColor="@color/black3"
+        android:textSize="@dimen/size15" />
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(要求: 时长≥60s）"
+        android:textColor="@color/text_gray"
+        android:textSize="@dimen/size15" />
+</LinearLayout>
+    <RelativeLayout
+        android:paddingStart="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/video_Up"
+        android:background="@drawable/icon_tab_zjzg"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+        <ImageView
+            android:id="@+id/video_Up1"
+            android:layout_toEndOf="@+id/video_Up"
+            android:background="@drawable/icon_tab_zjzg"
+            android:visibility="gone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="20dp" />
+   </RelativeLayout>
+    <TextView
+        android:id="@+id/vNum"
+        android:paddingTop="10dp"
+        android:paddingBottom="15dp"
+        android:gravity="center"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"/>
+    <TextView
+        android:id="@+id/videoUp"
+        android:text="上传"
+        android:padding="15dp"
+        android:gravity="center"
+        android:layout_marginBottom="35dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/bg_btn_bl"
+        android:textColor="@color/white"
+        android:textSize="@dimen/size15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

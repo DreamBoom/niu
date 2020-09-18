@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--百分比布局-->
+    <declare-styleable name="Percent">
+        <attr name="width_percent" format="float" />
+        <attr name="height_percent" format="float" />
+    </declare-styleable>
+</resources>
